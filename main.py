@@ -1,7 +1,7 @@
 from app import app, db
 from flask import request, render_template,redirect, url_for
 import os
-from app.classe_modelo import User
+from classe_modelo import User
 from flask_login import login_user, logout_user
 
 port = int(os.environ.get("PORT", 5000))
@@ -21,7 +21,7 @@ def cadastro():
         db.session.add(user)
         db.session.commit()
 
-        return 'cadastrado'
+        return redirect(url_for('pag_logar'))
     else:
         print("Error")
         return 'Error ao cadastrar'
