@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from __init__ import db, login_manager
+from inicializacao import db, login_manager
 from flask_login import UserMixin
 
 @login_manager.user_loader

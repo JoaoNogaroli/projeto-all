@@ -1,4 +1,4 @@
-from __init__ import app, db
+from inicializacao import app, db
 from flask import request, render_template,redirect, url_for
 import os
 from classe_modelo import User
