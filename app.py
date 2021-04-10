@@ -3,6 +3,15 @@ from flask import request, render_template,redirect, url_for
 import os
 from classe_modelo import User
 from flask_login import login_user, logout_user
+import pusher
+
+pusher_client = pusher.Pusher(
+  app_id='1184922',
+  key='172519f8f1cb46b08df5',
+  secret='2097baf12c51e484c5a3',
+  cluster='us2',
+  ssl=True
+)
 
 port = int(os.environ.get("PORT", 5000))
 
@@ -34,7 +43,19 @@ def pag_logar():
 @app.route("/logado")
 def logado():
 
-    return render_template('logado.html')   
+    return render_template('logado.html')  
+
+@app.route("/message", methods=['POST'])
+def message():
+  try:
+    username = request.form.get('username')
+    message = request.form.get('message')
+    #print(username)
+    #print(message)
+    pusher_client.trigger('chat-channel', 'new-message', {'username' : username, 'message': message})
+  except Exception as e:
+    print(e)
+  return 'ok'
 
 @app.route("/logar_user", methods=['POST'])
 def logar_user():
