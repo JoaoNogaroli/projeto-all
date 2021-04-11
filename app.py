@@ -46,8 +46,19 @@ def pag_logar():
 
 @app.route("/logado")
 def logado():
-
-    return render_template('logado.html')  
+    
+    teste = db.Table('teste',db.metadata)
+    todos = db.session.query(teste).all()
+    listanome=[]
+    print(todos)
+    for i in todos:
+        print(i.nome_user)
+        listanome.append(i.nome_user)
+    pegarid = []    
+    for i in todos:
+        print(i.id)
+        pegarid.append(i.id)
+    return render_template('logado.html', todos=todos)  
 
 @app.route("/message", methods=['POST'])
 def message():

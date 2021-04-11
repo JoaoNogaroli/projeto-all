@@ -41,11 +41,17 @@
                 
             </div>
         </div>
-        <div style="width:1px;height:100%; border-left:1px solid black;"></div>
-        <div class="col-sm-2">
-            <a><strong>Status: </strong>Logado</a><br>
+        <div class="col-sm-4">
+            <strong>Status: </strong><a style="color:green;">Logado</a><br>
             <hr>
-            <strong><a style="text-decoration: none;border:none;" >Nome:</a> </strong><a style="text-decoration: none;border:none;" class="text-muted" id="current_user"> {{ current_user.nome_user }}</a>
+            <strong><a style="text-decoration: none;border:none;" >Meu nome:</a> </strong><a style="text-decoration: none;border:none;" class="text-muted" id="current_user"> {{ current_user.nome_user }}</a>
+               <hr> <br>
+                <div class="shadow p-3 mb-5 bg-white rounded" style="background-color: #d1ced1;  width: auto;  height:500px ; text-align: justify;  padding: 20px; overflow-y: scroll;">
+                <h6>Usuários Cadastrados</h6>
+                {% for i in todos %}
+                <a><strong>User :</strong>{{ i.id }}</a><a>-- <strong>Nome: </strong>{{ i.nome_user }}  </a><br><button class="btn btn-primary btn-sm" style="width: auto;" >Chamar</button><br><hr>
+                {% endfor %}
+                </div>
         </div>
         
     </div>
