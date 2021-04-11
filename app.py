@@ -17,7 +17,7 @@ port = int(os.environ.get("PORT", 5000))
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('logar.html')
 
 @app.route("/cadastro", methods=['POST'])
 def cadastro():
@@ -26,11 +26,15 @@ def cadastro():
     email_user = request.form['email']
     senha_user = request.form['senha']
     if nome_user and email_user and senha_user:
-        user = User(nome_user, email_user, senha_user)
-        db.session.add(user)
-        db.session.commit()
+        try:
+            user = User(nome_user, email_user, senha_user)
+            db.session.add(user)
+            db.session.commit()
 
-        return redirect(url_for('pag_logar'))
+            return redirect(url_for('pag_logar'))
+        except Exception as e:
+            error = "Email já cadastrado, por favor tente outro."
+            return error
     else:
         print("Error")
         return 'Error ao cadastrar'

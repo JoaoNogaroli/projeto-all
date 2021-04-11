@@ -2,25 +2,57 @@
 {% block content %}
 
 {% if current_user.is_authenticated %}
-    <p>logado</p>
-    <h2 id="current_user">{{ current_user.nome_user }}</h2>
-<div class="container">
-    <nav class="navbar navbar-expand-md navbar-light fixed-bottom">
-        <!-- Navbar content -->
-        <div class="container">
-        <div class="navbar-item is-expanded">
-            
-            <input type="text" class="msg" id="username" readonly value="{{ current_user.nome_user }}" style="border:none; font-family:kiona; color:white"> <br><br>
-            <a>Insira sua Mensagem:</a>
-            <input type="text" class="msg" id="msg"> <br><br>
-            <input type="button"  id="start_chat" class="btn btn-success" value="Enviar">
-            
-    </nav>
-    
-    <div id="content" style="background-color: #d1ced1;  width: auto;  height:500px ; overflow-y: hidden; ;overflow: auto;  text-align: justify;  padding: 20px;">
+<style>
+
+::-webkit-scrollbar{
+    width: 7px;
+}
+
+::-webkit-scrollbar-track{
+    border:0px solid rgba(120, 121, 134, 0.411);
+    box-shadow: inset 0 0 0.5px rgba(43, 39, 63, 0.301);
+}
+::-webkit-scrollbar-thumb{
+    background-color: rgba(51, 51, 77, 0.486);
+    border-radius: 5px;
+
+}
+
+</style>
+<div class="container p-5">   
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="container">
+                
+                <div id="content" class="shadow p-3 mb-5 bg-white rounded " style="background-color: #d1ced1;  width: auto;  height:500px ; text-align: justify;  padding: 20px; overflow-y: scroll;">
+                    
+                </div>
+
+                
+                    <!-- Navbar content -->
+                    
+                    <div class="container">
+                        
+                        <input type="text" class="msg" id="username" readonly value="{{ current_user.nome_user }}" style="width:1px;border:none; font-family:kiona; color:white"> <br>
+                        <h4>Insira sua Mensagem:</h4>
+                        <input type="text" class="form-control custom-control" id="msg"></input> <br><br>
+                        <input type="button"  id="start_chat" class="btn btn-dark w-50 p-3" value="Enviar">
+                    </div>
+                
+            </div>
+        </div>
+        <div style="width:1px;height:100%; border-left:1px solid black;"></div>
+        <div class="col-sm-2">
+            <a><strong>Status: </strong>Logado</a><br>
+            <hr>
+            <strong><a style="text-decoration: none;border:none;" >Nome:</a> </strong><a style="text-decoration: none;border:none;" class="text-muted" id="current_user"> {{ current_user.nome_user }}</a>
+        </div>
+        
     </div>
+</div>   
     
-</div>
+    
+    
     
     
         
@@ -39,7 +71,7 @@
         msg = $('#msg').val();
         data = {'username': username, 'msg': msg}
         //alert("Username: "+ data.username+'\n' + "Mensagem: " + msg);
-        $('.msg').val("");
+        $('#msg').val("");
         $.post('/message', {'username':username,'message': msg}, function(){
         
         });
@@ -71,9 +103,11 @@
                                 <div class="media-content">
                                     <div class="content">
                                     <p>
-                                        <strong>Nome: ${name}</strong>
-                                        <br><h9 style="font-size: 12px"> ${hour} --</h9>
-                                        Mensagem: <input readonly id="${momento}" style="background-color:transparent; text-decorate:none; border:none" value="${msg}"></input>
+                                        <strong>${name}: </strong>
+                                        
+                                        <input readonly id="${momento}" style="width:100%;background-color:transparent; text-decorate:none; border:none" value="${msg}"></input>
+                                        <h9 style="font-size: 10px"> ${hour} </h9>
+                                        <hr>
                                     </p>
                                     </div>
                                 </div>
