@@ -1,7 +1,7 @@
 from inicializacao import app, db
 from flask import request, render_template,redirect, url_for
 import os
-from classe_modelo import User
+from classe_modelo import User, Mensagens
 from flask_login import login_user, logout_user
 import pusher
 
@@ -46,28 +46,44 @@ def pag_logar():
 
 @app.route("/logado")
 def logado():
-    
+    #(START)---- carrega os dados da pagina
     teste = db.Table('teste',db.metadata)
     todos = db.session.query(teste).all()
     listanome=[]
-    print(todos)
+    #print(todos)
     for i in todos:
-        print(i.nome_user)
+        #print(i.nome_user)
         listanome.append(i.nome_user)
     pegarid = []    
     for i in todos:
-        print(i.id)
+        #print(i.id)
         pegarid.append(i.id)
-    return render_template('logado.html', todos=todos)  
+    #(END)---- carrega os dados da pagina
+
+    #(START) ----- Carrregar mensagens enviadas 
+    mensagens = Mensagens.query.all()
+
+    #(END) ------ Carrregar mensagens enviadas 
+    return render_template('logado.html', todos=todos, mensagens = mensagens)  
 
 @app.route("/message", methods=['POST'])
 def message():
   try:
     username = request.form.get('username')
+    email = request.form.get('email')
     message = request.form.get('message')
+    momento =  request.form.get('momento')
     #print(username)
     #print(message)
     pusher_client.trigger('chat-channel', 'new-message', {'username' : username, 'message': message})
+
+    #(START) --- guardar dados da mensagem no banco
+    
+    salvar_mensagem_no_banco = Mensagens(username,email, message, momento)
+    #user = User(nome_user, email_user, senha_user)
+    db.session.add(salvar_mensagem_no_banco)
+    db.session.commit()
+    #(END) --- guardar dados da mensagem no banco
   except Exception as e:
     print(e)
   return 'ok'

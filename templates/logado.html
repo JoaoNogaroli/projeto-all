@@ -25,6 +25,21 @@
             <div class="container">
                 
                 <div id="content" class="shadow p-3 mb-5 bg-white rounded " style="background-color: #d1ced1;  width: auto;  height:500px ; text-align: justify;  padding: 20px; overflow-y: scroll;">
+                    {% for mensagem in mensagens %}
+                    <article class="media">
+                        <div class="media-content">
+                            <div class="content">
+                            <p>
+                                <strong style="width:auto; float:left">{{ mensagem.nome_user }}: </strong>
+                                
+                                <input readonly  style="width:100%;background-color:transparent;text-decoration:none; border:none" value="{{ mensagem.mensagem }}"></input>
+                                <h9 style="font-size: 10px"> {{ mensagem.momento }} </h9>
+                                <hr>
+                            </p>
+                            </div>
+                        </div>
+                        </article>   
+                    {% endfor %}
                     
                 </div>
 
@@ -34,6 +49,7 @@
                     <div class="container">
                         
                         <input type="text" class="msg" id="username" readonly value="{{ current_user.nome_user }}" style="width:1px;border:none; font-family:kiona; color:white"> <br>
+                        <input type="text" class="msg" id="email" readonly value="{{ current_user.email_user }}" style="width:1px;border:none; font-family:kiona; color:white"> <br>
                         <h4>Insira sua Mensagem:</h4>
                         <input type="text" class="form-control custom-control" id="msg"></input> <br><br>
                         <input type="button"  id="start_chat" class="btn btn-dark w-50 p-3" value="Enviar">
@@ -69,16 +85,22 @@
     
 
     $(function(){
-        teste = document.getElementById('current_user').innerHTML;
-        //console.log("USER: " + teste)
+        teste = document.getElementById('username').value;
+        email = document.getElementById('email').value;
+
+        
     $('#start_chat').on('click', function(){
         $('#current_user').val();
         username =  teste;
+        email=email
         msg = $('#msg').val();
         data = {'username': username, 'msg': msg}
         //alert("Username: "+ data.username+'\n' + "Mensagem: " + msg);
         $('#msg').val("");
-        $.post('/message', {'username':username,'message': msg}, function(){
+        const now = new Date();
+        const hour = "Enviado: "+ now.getHours()+":"+now.getMinutes();
+        const momento = now.getTime();
+        $.post('/message', {'username':username,'email':email,'message': msg, 'momento':hour}, function(){
         
         });
 
