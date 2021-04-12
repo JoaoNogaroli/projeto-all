@@ -66,7 +66,7 @@
                 <h6>Usuários Cadastrados</h6>
                 {% for i in todos %}
                 <span class="pegaremail" id="{{i.id}}">{{i.email_user}}</span><br>
-                <strong>User :</strong><a>{{ i.id }}</a><a>-- <strong>Nome: </strong>{{ i.nome_user }}  </a><br><button id="{{'Valor' + str(i.id)}}" class="btn btn-primary btn-sm" style="width: auto;" >Chamar</button><br><hr>
+                <strong>User :</strong><a>{{ i.id }}</a><a>-- <strong>Nome: </strong>{{ i.nome_user }}  </a><br><button id="{{'Valor' + str(i.id)}}" type="submit" class="btn btn-primary btn-sm" style="width: auto;" >Chamar</button><br><hr>
                 {% endfor %}
                 </div>
         </div>
@@ -87,6 +87,19 @@
         teste = document.getElementById('username').value;
         email = document.getElementById('email').value;
 
+        /* CADA BOTAO COM SEU RESPECTIVO EMAIL*/
+    lista_email.forEach(function(essa){
+        console.log('Valor ' + essa)
+        /*var res = essa.replace("@","_")*/
+        $('#Valor'+essa).click(function(){
+            valoremailfinal = document.getElementById(essa).innerHTML;
+            console.log(valoremailfinal)
+            $.post('/conversa', {'email_envia':email,'email_recebe':valoremailfinal}, function(){
+                window.location.replace('/conversa');
+            });
+
+        });
+    });
         
     $('#start_chat').on('click', function(){
         $('#current_user').val();
@@ -110,7 +123,7 @@
     });
     
     // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
+    //Pusher.logToConsole = true;
 
     var pusher = new Pusher('172519f8f1cb46b08df5', {
     cluster: 'us2'
@@ -148,15 +161,7 @@
     });
     
 
-    /* CADA BOTAO COM SEU RESPECTIVO EMAIL*/
-    lista_email.forEach(function(essa){
-        console.log('Valor ' + essa)
-        /*var res = essa.replace("@","_")*/
-        $('#Valor'+essa).click(function(){
-            valoremailfinal = document.getElementById(essa).innerHTML;
-            console.log(valoremailfinal)
-        });
-    });
+    
     /*lista_email.forEach(function(essa){
         $("#Valor "+essa).click(function(){
             elemento = document.getElementById(essa).innerHTML;

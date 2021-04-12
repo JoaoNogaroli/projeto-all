@@ -1,9 +1,10 @@
 from inicializacao import app, db
-from flask import request, render_template,redirect, url_for
+from flask import request, render_template,redirect, url_for, jsonify, session
 import os
-from classe_modelo import User, Mensagens
+from classe_modelo import User, Mensagens, Privado
 from flask_login import login_user, logout_user
 import pusher
+from sqlalchemy import or_
 
 pusher_client = pusher.Pusher(
   app_id='1184922',
@@ -110,7 +111,61 @@ def logar_user():
     login_user(user)
     return redirect(url_for('logado'))
 
- 
+@app.route("/conversa", methods=['POST']) 
+def conversa():
+    session['email_envia'] = request.form.get('email_envia')
+    session['email_recebe'] = request.form.get('email_recebe')
+    
+    return 'ok'
+
+    #print(valores)
+
+@app.route("/conversa")
+def red_conversa():
+    email_envia = session['email_envia']
+    email_recebe = session['email_recebe']
+    tabela_pegar = db.Table('privado', db.metadata)
+    todos = db.session.query(tabela_pegar).filter(or_(Privado.email_envia== v for v in (email_envia,email_recebe))).filter(or_(Privado.email_recebe== v for v in (email_envia,email_recebe))).all()
+
+    return render_template('conversa.html',email_envia=email_envia,email_recebe=email_recebe, todos=todos)
+
+@app.route("/privado", methods=['POST'])
+def privado():
+    email_envia = request.form.get('email_envia')
+    email_recebe = request.form.get('email_recebe')
+    mensagem = request.form.get('message')
+    momento = str(request.form.get('momento'))
+
+    
+    # E --- ENVIANDO MENSAGEM PARA O BD
+    privado = Privado(email_envia, email_recebe, mensagem,momento)
+    db.session.add(privado)
+    db.session.commit()
+
+
+    #pegando a Mensagem do banco
+    lista_email_primeiro=[]
+    
+    lista_email_primeiro.append(email_envia)
+    lista_email_primeiro.append(email_recebe)
+    
+    primeiro_email = sorted(lista_email_primeiro)[0]
+    segundo_email = sorted(lista_email_primeiro)[1]
+    sessao_canal = primeiro_email+segundo_email
+        
+
+
+    email_envia_sessao_um = primeiro_email.replace('@','_');
+    email_envia_sessao_dois = email_envia_sessao_um.replace('.','_')
+    email_recebe_sessao_um = segundo_email.replace('@','_');
+    email_recebe_sessao_dois = email_recebe_sessao_um.replace('.','_')
+    sessao_canal = email_envia_sessao_dois+'_'+email_recebe_sessao_dois
+    #print(sessao_canal)
+    pusher_client.trigger('chat-channel', sessao_canal, {'email_envia' : email_envia, 'message': mensagem})
+
+    #for mg in todos:
+        #print(mg[3])
+    return 'ok'
 
 if __name__ == "__main__":
     app.run(debug=True, port=port)

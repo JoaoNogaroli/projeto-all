@@ -36,3 +36,17 @@ class Mensagens(db.Model):
         self.email_user = email_user
         self.mensagem = mensagem
         self.momento = momento
+
+class Privado(db.Model):
+    __tablename__ = 'privado'
+    id = db.Column(db.Integer, primary_key=True)
+    email_envia = db.Column(db.String(25), nullable=False)
+    email_recebe = db.Column(db.String(25), nullable=False)
+    mensagem = db.Column(db.String(),nullable=False)    
+    momento = db.Column(db.String(),nullable=False)    
+    
+    def __init__(self,email_envia,email_recebe,mensagem, momento):  
+        self.email_envia = email_envia
+        self.email_recebe = email_recebe
+        self.mensagem = mensagem
+        self.momento = momento
