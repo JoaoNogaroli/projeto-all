@@ -64,7 +64,7 @@ def logado():
     mensagens = Mensagens.query.all()
 
     #(END) ------ Carrregar mensagens enviadas 
-    return render_template('logado.html', todos=todos, mensagens = mensagens)  
+    return render_template('logado.html', todos=todos, mensagens = mensagens, str=str)  
 
 @app.route("/message", methods=['POST'])
 def message():

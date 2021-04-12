@@ -65,7 +65,8 @@
                 <div class="shadow p-3 mb-5 bg-white rounded" style="background-color: #d1ced1;  width: auto;  height:500px ; text-align: justify;  padding: 20px; overflow-y: scroll;">
                 <h6>Usuários Cadastrados</h6>
                 {% for i in todos %}
-                <a><strong>User :</strong>{{ i.id }}</a><a>-- <strong>Nome: </strong>{{ i.nome_user }}  </a><br><button class="btn btn-primary btn-sm" style="width: auto;" >Chamar</button><br><hr>
+                <span class="pegaremail" id="{{i.id}}">{{i.email_user}}</span><br>
+                <strong>User :</strong><a>{{ i.id }}</a><a>-- <strong>Nome: </strong>{{ i.nome_user }}  </a><br><button id="{{'Valor' + str(i.id)}}" class="btn btn-primary btn-sm" style="width: auto;" >Chamar</button><br><hr>
                 {% endfor %}
                 </div>
         </div>
@@ -73,17 +74,15 @@
     </div>
 </div>   
     
-    
-    
-    
-    
-        
-    
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script>
-
-    
-
+    el = document.getElementsByClassName('pegaremail');
+    console.log(el)    
+    var lista_email = []
+    Object.keys(el).forEach(function(key){
+        item = el[key].id;
+        lista_email.push(item);
+    });
     $(function(){
         teste = document.getElementById('username').value;
         email = document.getElementById('email').value;
@@ -145,9 +144,28 @@
     document.getElementById(""+momento+"").focus();
     document.getElementById(""+momento+"").blur();
     
-
-
+    
     });
+    
+
+    /* CADA BOTAO COM SEU RESPECTIVO EMAIL*/
+    lista_email.forEach(function(essa){
+        console.log('Valor ' + essa)
+        /*var res = essa.replace("@","_")*/
+        $('#Valor'+essa).click(function(){
+            valoremailfinal = document.getElementById(essa).innerHTML;
+            console.log(valoremailfinal)
+        });
+    });
+    /*lista_email.forEach(function(essa){
+        $("#Valor "+essa).click(function(){
+            elemento = document.getElementById(essa).innerHTML;
+            console.log("EMAIL referente: "+ elemento);
+        });
+    });*/
+        
+    
+
 </script>
 
 
